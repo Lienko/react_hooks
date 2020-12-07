@@ -13,7 +13,7 @@ export default function App()
 
   // async eh usado para poder utilizar await
   useEffect(() => { async function fetchData(){
-    const response = await App.getData('https://api.github.com/users/diego3g/repos');
+    const response = await App.getData('https://api.github.com/users/lienko/repos');
     const data = await response.json();
     setRepositories(data);
     }
