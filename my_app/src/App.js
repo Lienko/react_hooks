@@ -1,32 +1,30 @@
-import React, {useState} from "react";
+import React, {useState, useEffect} from "react";
 
-// useState, useContext... sao os hooks 
-// ao inves de receber uma classe com jsx (java script x) ele vai receber uma funcao
-// e a funcao e os estados se aplicam a funcao
+// useState, useContext, useEffect... sao os hooks 
+// Nesse exemplo vai usar coisas mais dinamicas
 
 export default function App() 
 {
+  const [repositories, setRepositories] = useState([]); 
 
-  // useState retorna um repositorio de estados e uma funcao que atualiza o estado
-  // useState(aqui vai o estado inicial)
+  // useEffect recebe dois parametros: funcao que sera executada, circunstancia em que
+  // a funcao enviada deve ser executada. a circunstancia eh uma lista de uma ou  mais variaveis
+  // efeito vai ser executado quando uma das variaveis mudar, posso mandar quantas variaveis eu quiser
 
-  const [repositories, setRepositories] = useState([
-    {id:1, name:'lari'},
-    {id:2, name:'deb'},
-    {id:3, name:'iwan'}
-  ]); 
+  // async eh usado para poder utilizar await
+  useEffect(() => { async function fetchData(){
+    const response = await App.getData('https://api.github.com/users/diego3g/repos');
+    const data = await response.json();
+    setRepositories(data);
+    }
+    // const response = await fetch();
+  }, []);
+  // nao preencher o array de circustancia porque a funcao definida precisa rodar apenas uma vez
+  // como useEffect nao tem dependencia, ele nao vai executar novamente , independente de variaveis mudarem ou nao
   
-  // Posso criar um funcao dentro da funcao do app (ela vai ficar scopada, so encontra no escopo da funcao App)
-  function handleAddRepository()
-  {
-    setRepositories([
-      ...repositories,
-      {id: Math.random(), name: "Novo repo"}])
-  }
-
-  // return <h1> Hello Lari </h1>;
+  // posso ter inumeros useEffects na pagina
+ 
   return (
-    <>
       <ul>
         {
           repositories.map(repo => (
@@ -34,9 +32,5 @@ export default function App()
           ))
         }
       </ul>
-      <button onClick={handleAddRepository}>
-        adicionar repositorio
-      </button>
-    </>
   );
 }
